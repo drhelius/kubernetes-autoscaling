@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-autoscaler-app
+  namespace: cluster-autoscaler-demo
+spec:
+  selector:
+    matchLabels:
+      app: cluster-autoscaler-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cluster-autoscaler-app
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534 # nobody
+      containers:
+        - name: cluster-autoscaler-app
+          image: debian:11-slim
+          resources:
+            requests:
+              cpu: 100m
+              memory: 2Gi
+          command: ["/bin/sh"]
+          args:
+            - "-c"
+            - "while true; do sleep 10s; done"

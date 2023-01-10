@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpa-app
+  namespace: vpa-demo
+spec:
+  selector:
+    matchLabels:
+      app: vpa-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: vpa-app
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534 # nobody
+      containers:
+        - name: vpa-app
+          image: debian:11-slim
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+          command: ["/bin/sh"]
+          args:
+            - "-c"
+            - "while true; do timeout 0.5s yes >/dev/null; sleep 0.5s; done"
